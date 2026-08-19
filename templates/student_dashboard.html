@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard | VIGNAN CAMPUS TRANSPORT SYSTEM</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/" class="nav-brand">
+                <i class="fa-solid fa-bus-simple brand-icon"></i>
+                <div class="brand-text">
+                    <span class="brand-title">VIGNAN CAMPUS TRANSPORT SYSTEM</span>
+                    <span class="brand-subtitle">STUDENT DASHBOARD</span>
+                </div>
+            </a>
+
+            <div class="nav-links">
+                <span class="nav-user-info"><i class="fa-solid fa-user-graduate"></i> <strong>{{ student.name }}</strong> ({{ student.student_id }})</span>
+                <a href="/logout" class="btn btn-sm btn-outline-danger nav-btn"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Popup Toast Notifications Container -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <div class="dashboard-wrapper">
+        <!-- Top Banner Header -->
+        <div class="dash-header">
+            <div class="dash-welcome">
+                <h2>VIGNAN CAMPUS TRANSPORT SYSTEM</h2>
+                <p class="text-muted">
+                    Welcome, <strong>{{ student.name }}</strong> &bull; Student ID: <strong>{{ student.student_id }}</strong>
+                </p>
+            </div>
+
+            <div class="dash-selector-box flex-wrap gap-2">
+                <button type="button" class="btn btn-warning shadow-sm" onclick="openQrScannerModal()">
+                    <i class="fa-solid fa-camera"></i> Scan Bus QR
+                </button>
+
+                <div class="selector-item">
+                    <label for="bus-selector"><i class="fa-solid fa-bus"></i> Tracked Bus:</label>
+                    <select id="bus-selector" class="form-select" onchange="onStudentSelectBus(this.value)">
+                        <option value="">-- Choose Bus --</option>
+                        {% for bus in buses %}
+                            <option value="{{ bus.id }}" {% if selected_bus and selected_bus.id == bus.id %}selected{% endif %}>
+                                {{ bus.bus_number }} ({{ bus.route_name }})
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="selector-item">
+                    <label for="pickup-stop-selector"><i class="fa-solid fa-location-dot"></i> Pickup Location:</label>
+                    <select id="pickup-stop-selector" class="form-select" onchange="onStudentSelectPickupStop(this.value)">
+                        <option value="">-- Select Pickup Stop --</option>
+                        <option value="1">Stop 1 (Guntur Station)</option>
+                        <option value="2">Stop 2 (Collectorate Circle)</option>
+                        <option value="3">Stop 3 (Vignan Campus Gate 1)</option>
+                        <option value="4">Stop 4 (Tenali Bus Stand)</option>
+                        <option value="5">Stop 5 (Vignan Main Gate)</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Full Width Vertical Stack Layout for Student Portal -->
+        <div class="student-vertical-stack">
+            <!-- 1. GPS MAP (FULL WIDTH) -->
+            <div class="student-map-section card mb-3">
+                <div class="card-header flex-between">
+                    <span><i class="fa-solid fa-map-location-dot text-primary"></i> <strong>LIVE GPS MAP</strong></span>
+                    <div class="map-badge" id="next-stop-indicator">Next Stop: <strong id="map-next-stop">Calculating...</strong></div>
+                </div>
+
+                <div id="student-map" class="interactive-map" style="height: 480px; width: 100%;"></div>
+
+                <!-- Voice Control Toolbar Bar -->
+                <div class="voice-toolbar-bar">
+                    <div class="voice-toggle-group">
+                        <button type="button" id="btn-toggle-voice" class="btn btn-outline-primary active" onclick="toggleVoiceSystem()">
+                            <i class="fa-solid fa-volume-high" id="voice-icon"></i> Voice Notifications: <strong id="voice-status-text">ON</strong>
+                        </button>
+                        <button type="button" class="btn btn-sm btn-danger" onclick="silenceVoiceManual()">
+                            <i class="fa-solid fa-volume-xmark"></i> Mute
+                        </button>
+                    </div>
+
+                    <div class="proximity-indicator-box">
+                        <span class="proximity-tag" id="proximity-badge">
+                            <i class="fa-solid fa-shield-cat"></i> Auto-Off (<= 50m): <strong id="prox-status">MONITORING</strong>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. MAP LEGEND (SEPARATE CONTAINER BELOW MAP) -->
+            <div class="card map-legend-card mb-3">
+                <div class="card-header bg-light">
+                    <span><i class="fa-solid fa-layer-group text-primary"></i> <strong>MAP LEGEND</strong></span>
+                </div>
+                <div class="card-body p-3">
+                    <div class="legend-grid-flow">
+                        <div class="legend-chip"><span class="legend-color-dot" style="background:#1E88E5;"></span> 🚌 Bus 1 — Blue</div>
+                        <div class="legend-chip"><span class="legend-color-dot" style="background:#E53935;"></span> 🚌 Bus 2 — Red</div>
+                        <div class="legend-chip"><span class="legend-color-dot" style="background:#43A047;"></span> 🚌 Bus 3 — Green</div>
+                        <div class="legend-chip"><span class="legend-color-dot" style="background:#FB8C00;"></span> 🚌 Bus 4 — Orange</div>
+                        <div class="legend-chip"><span class="legend-color-dot" style="background:#8E24AA;"></span> 🚌 Bus 5 — Purple</div>
+                        <div class="legend-chip"><i class="fa-solid fa-user text-danger"></i> 👤 Student / Pickup Point</div>
+                        <div class="legend-chip"><i class="fa-solid fa-graduation-cap text-purple"></i> 🎓 VIGNAN COLLEGE — Destination</div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- 3. LIVE BUS TRACKING -->
+            <div class="card selected-bus-card mb-3" id="live-tracking-card">
+                <div class="card-header flex-between">
+                    <span><i class="fa-solid fa-bus"></i> 🚌 LIVE BUS TRACKING</span>
+                    <span class="badge {% if selected_bus and selected_bus.status == 'ACTIVE' %}bg-success{% elif selected_bus and selected_bus.status == 'EMERGENCY' %}bg-danger{% else %}bg-secondary{% endif %}" id="status-badge">
+                        {{ selected_bus.status if selected_bus else 'IDLE' }}
+                    </span>
+                </div>
+
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-4 col-sm-6">
+                            <span class="meta-label">Selected Bus:</span>
+                            <h4 class="meta-value highlight text-primary mb-0" id="card-selected-bus">{{ selected_bus.bus_number if selected_bus else 'None' }}</h4>
+                        </div>
+                        <div class="col-md-4 col-sm-6">
+                            <span class="meta-label">Driver Name:</span>
+                            <div class="meta-value fw-bold" id="driver-card-name">{{ selected_bus.driver_name if selected_bus else 'Unassigned' }}</div>
+                        </div>
+                        <div class="col-md-4 col-sm-6">
+                            <span class="meta-label">Driver Phone:</span>
+                            <div class="meta-value">
+                                <a id="driver-card-phone-link" href="tel:{{ selected_bus.driver_phone if selected_bus else '#' }}">
+                                    <span id="driver-card-phone">{{ selected_bus.driver_phone if selected_bus else 'N/A' }}</span>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-6">
+                            <span class="meta-label">Route:</span>
+                            <div class="meta-value" id="driver-card-route">{{ selected_bus.route_name if selected_bus else 'N/A' }}</div>
+                        </div>
+                        <div class="col-md-4 col-sm-6">
+                            <span class="meta-label">Current Stop:</span>
+                            <div class="meta-value text-dark fw-bold" id="card-current-stop">Calculating...</div>
+                        </div>
+                        <div class="col-md-4 col-sm-6">
+                            <span class="meta-label">Next Stop:</span>
+                            <div class="meta-value text-dark fw-bold" id="card-next-stop">Calculating...</div>
+                        </div>
+                        <div class="col-md-4 col-sm-6">
+                            <span class="meta-label">Distance:</span>
+                            <div class="meta-value text-primary fs-5 fw-bold" id="card-bus-distance">-- km</div>
+                        </div>
+                        <div class="col-md-4 col-sm-6">
+                            <span class="meta-label">ETA:</span>
+                            <div class="meta-value text-purple fs-5 fw-bold" id="card-bus-eta">-- minutes</div>
+                        </div>
+                        <div class="col-md-4 col-sm-6">
+                            <span class="meta-label">Voice Notification:</span>
+                            <div class="meta-value" id="card-voice-indicator">🔊 ON</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. LIVE BUS DIRECTIONS -->
+            <div class="card directions-card mb-3" id="directions-panel">
+                <div class="card-header flex-between bg-info text-white">
+                    <span><i class="fa-solid fa-compass"></i> 🧭 LIVE BUS DIRECTIONS</span>
+                    <span class="badge bg-light text-dark">Road-Following Route</span>
+                </div>
+                <div class="card-body p-3">
+                    <div class="row g-2 mb-3">
+                        <div class="col-md-3 col-sm-6">
+                            <div class="p-2 bg-light rounded border">
+                                <small class="text-muted d-block">Selected Bus:</small>
+                                <strong id="dir-selected-bus">{{ selected_bus.bus_number if selected_bus else 'BUS 2' }}</strong>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-6">
+                            <div class="p-2 bg-light rounded border">
+                                <small class="text-muted d-block">Current Stop:</small>
+                                <strong id="dir-curr-stop">Stop 2</strong>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-6">
+                            <div class="p-2 bg-light rounded border">
+                                <small class="text-muted d-block">Pickup Point:</small>
+                                <strong id="dir-next-stop" class="text-danger">Stop 3</strong>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-6">
+                            <div class="p-2 bg-light rounded border">
+                                <small class="text-muted d-block">Final Destination:</small>
+                                <strong class="text-purple">🎓 VIGNAN COLLEGE</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h6 class="mb-2"><strong>Turn-by-Turn Road Directions:</strong></h6>
+                    <ol id="directions-steps-list" class="ps-3 mb-0 text-dark">
+                        <li>1. Start at selected bus current GPS location.</li>
+                        <li>2. Follow road geometry along configured route corridor.</li>
+                        <li>3. Turn towards Pickup Point 3.</li>
+                        <li>4. Reach Pickup Point 3.</li>
+                        <li>5. Proceed along Main Road towards 🎓 VIGNAN COLLEGE.</li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- 5. SELECTED BUS QR -->
+            <div class="card bus-qr-display-card mb-3">
+                <div class="card-header flex-between">
+                    <span><i class="fa-solid fa-qrcode"></i> 📱 SELECTED BUS QR</span>
+                    <span class="badge bg-primary" id="card-qr-code-val">{{ selected_bus.qr_code_value if selected_bus else 'VCT-BUS-002' }}</span>
+                </div>
+                <div class="card-body text-center p-3">
+                    <h5 class="mb-2" id="card-qr-title"><strong>{{ selected_bus.bus_number if selected_bus else 'BUS 2' }} QR CODE</strong></h5>
+                    <div class="qr-img-box p-2 bg-light rounded border d-inline-block mb-3">
+                        <img id="card-qr-img" src="{{ selected_bus.qr_image_url if selected_bus else 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=VCT-BUS-002' }}" alt="Bus QR Code" style="width: 160px; height: 160px; object-fit: contain;">
+                    </div>
+                    
+                    <div>
+                        <button type="button" class="btn btn-danger btn-lg shadow px-4" onclick="openLiveSelectedBus()">
+                            <i class="fa-solid fa-circle-play"></i> 🔴 OPEN LIVE TRACKING
+                        </button>
+                    </div>
+                    <small class="text-muted d-block mt-2">Click OPEN LIVE to immediately activate live tracking and directions for this bus.</small>
+                </div>
+            </div>
+
+            <!-- 6. SCAN BUS QR -->
+            <div class="card qr-section-card mb-3">
+                <div class="card-header"><i class="fa-solid fa-camera"></i> 📷 SCAN BUS QR</div>
+                <div class="card-body text-center">
+                    <button type="button" class="btn btn-warning btn-block btn-lg" onclick="openQrScannerModal()">
+                        <i class="fa-solid fa-camera"></i> Scan Bus QR Code (Camera)
+                    </button>
+                    <small class="text-muted d-block mt-2">Scans unique bus codes e.g. <code>VCT-BUS-001</code>, <code>VCT-BUS-002</code>, <code>VCT-BUS-003</code></small>
+                </div>
+            </div>
+
+            <!-- 7. POPUP NOTIFICATIONS -->
+            <div class="card notification-card mb-3">
+                <div class="card-header flex-between">
+                    <span><i class="fa-solid fa-bell"></i> 🔔 POPUP NOTIFICATIONS</span>
+                    <span class="badge bg-primary">Live Updates</span>
+                </div>
+                <div class="card-body notif-feed" id="notification-feed" style="max-height: 250px; overflow-y: auto;">
+                    <div class="text-center text-muted py-3">Connecting to real-time notification stream...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- 📷 QR CODE SCANNER MODAL -->
+    <div class="modal-overlay" id="qr-modal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-qrcode"></i> SCAN BUS QR CODE</h3>
+                <button type="button" class="btn-close" onclick="closeQrScannerModal()">&times;</button>
+            </div>
+            <div class="modal-body text-center">
+                <p class="text-muted">Scan the unique QR code on the bus to select it instantly.</p>
+                <div id="qr-reader" class="qr-camera-box"></div>
+
+                <hr class="my-3">
+                <div class="form-group">
+                    <label for="manual-qr-input"><strong>Manual QR Code Entry:</strong></label>
+                    <div class="input-group mt-1">
+                        <input type="text" id="manual-qr-input" class="form-control" placeholder="e.g. BUS001 or BUS002">
+                        <button type="button" class="btn btn-primary" onclick="submitManualQrCode()">Scan Code</button>
+                    </div>
+                    <small class="text-muted">Unique QR Codes: <code>BUS001</code>, <code>BUS002</code>, <code>BUS003</code>, <code>BUS004</code>, <code>BUS005</code></small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Socket.IO & Leaflet JS -->
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <!-- Custom App JS -->
+    <script src="{{ url_for('static', filename='js/map.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/notifications.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/voice.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/student.js') }}"></script>
+
+    <script>
+    window.STUDENT_DATA = {
+        student_db_id: {{ student.id }},
+        student_id_code: "{{ student.student_id }}",
+        selected_bus_id: {{ selected_bus.id if selected_bus else 'null' }}
+    };
+    </script>
+</body>
+</html>

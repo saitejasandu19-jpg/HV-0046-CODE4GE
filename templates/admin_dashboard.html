@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Operations Panel | VIGNAN CAMPUS TRANSPORT SYSTEM</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/" class="nav-brand">
+                <i class="fa-solid fa-bus-simple brand-icon"></i>
+                <div class="brand-text">
+                    <span class="brand-title">VIGNAN CAMPUS TRANSPORT SYSTEM</span>
+                    <span class="brand-subtitle">ADMIN OPERATIONS PANEL</span>
+                </div>
+            </a>
+            <div class="nav-links">
+                <a href="/logout" class="btn btn-sm btn-outline-danger nav-btn"><i class="fa-solid fa-right-from-bracket"></i> Logout (Admin)</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="admin-layout">
+        <aside class="admin-sidebar">
+            <div class="sidebar-header">
+                <i class="fa-solid fa-user-shield"></i>
+                <span>ADMIN PANEL</span>
+            </div>
+
+            <ul class="sidebar-menu">
+                <li class="active"><a href="#tab-overview" onclick="showAdminTab('overview')"><i class="fa-solid fa-chart-line"></i> Dashboard Overview</a></li>
+                <li><a href="#tab-buses" onclick="showAdminTab('buses')"><i class="fa-solid fa-bus"></i> Manage Buses</a></li>
+                <li><a href="#tab-drivers" onclick="showAdminTab('drivers')"><i class="fa-solid fa-id-card"></i> Manage Drivers</a></li>
+                <li><a href="#tab-students" onclick="showAdminTab('students')"><i class="fa-solid fa-graduation-cap"></i> Manage Students</a></li>
+                <li><a href="#tab-routes" onclick="showAdminTab('routes')"><i class="fa-solid fa-route"></i> Manage Routes & Stops</a></li>
+                <li><a href="#tab-assignments" onclick="showAdminTab('assignments')"><i class="fa-solid fa-handshake"></i> Driver Assignments</a></li>
+                <li><a href="#tab-replacement" onclick="showAdminTab('replacement')"><i class="fa-solid fa-repeat"></i> Replacement Bus Wizard</a></li>
+                <li><a href="#tab-emergencies" onclick="showAdminTab('emergencies')"><i class="fa-solid fa-triangle-exclamation"></i> Emergencies <span class="badge bg-danger" id="sidebar-emerg-count">{{ stats.active_emergencies }}</span></a></li>
+            </ul>
+        </aside>
+
+        <div class="admin-main">
+            <div class="dash-metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-icon blue"><i class="fa-solid fa-bus"></i></div>
+                    <div class="metric-body">
+                        <span class="metric-label">Total Buses</span>
+                        <h3 class="metric-value">{{ stats.total_buses }}</h3>
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-icon green"><i class="fa-solid fa-circle-check"></i></div>
+                    <div class="metric-body">
+                        <span class="metric-label">Active Fleet</span>
+                        <h3 class="metric-value" id="stat-active-fleet">{{ stats.active_buses }}</h3>
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-icon purple"><i class="fa-solid fa-graduation-cap"></i></div>
+                    <div class="metric-body">
+                        <span class="metric-label">Total Students</span>
+                        <h3 class="metric-value">{{ stats.total_students }}</h3>
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-icon red"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                    <div class="metric-body">
+                        <span class="metric-label">Active Emergencies</span>
+                        <h3 class="metric-value text-danger" id="stat-emerg-count">{{ stats.active_emergencies }}</h3>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 1: OVERVIEW & LIVE MAP -->
+            <div id="tab-overview" class="admin-tab-content active">
+                <div class="card mb-4">
+                    <div class="card-header flex-between">
+                        <span><i class="fa-solid fa-map-location-dot"></i> CAMPUS FLEET LIVE TRACKING MAP</span>
+                        <span class="badge bg-success"><i class="fa-solid fa-signal"></i> Telemetry Active</span>
+                    </div>
+                    <div id="admin-map" class="interactive-map admin-map-height"></div>
+                </div>
+
+                <div class="card sim-toolbar-card">
+                    <div class="card-body flex-between flex-wrap">
+                        <div>
+                            <h4 class="mb-1"><i class="fa-solid fa-play"></i> Demo Simulation Engine Controls</h4>
+                            <p class="text-muted mb-0">Simulate smooth 5-bus road movement along campus routes</p>
+                        </div>
+
+                        <div class="sim-btn-group">
+                            <button class="btn btn-sm btn-success" onclick="adminSimControl('start')"><i class="fa-solid fa-play"></i> START ALL BUSES</button>
+                            <button class="btn btn-sm btn-warning" onclick="adminSimControl('pause')"><i class="fa-solid fa-pause"></i> PAUSE</button>
+                            <button class="btn btn-sm btn-info" onclick="adminSimControl('resume')"><i class="fa-solid fa-forward"></i> RESUME</button>
+                            <button class="btn btn-sm btn-danger" onclick="adminSimControl('stop')"><i class="fa-solid fa-stop"></i> STOP ALL</button>
+                            
+                            <div class="btn-group ml-2">
+                                <span class="btn btn-sm btn-outline-dark disabled">Speed:</span>
+                                <button class="btn btn-sm btn-outline-dark" onclick="adminSimSpeed(1.0)">x1</button>
+                                <button class="btn btn-sm btn-outline-dark" onclick="adminSimSpeed(2.0)">x2</button>
+                                <button class="btn btn-sm btn-outline-dark" onclick="adminSimSpeed(5.0)">x5</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 2: MANAGE BUSES -->
+            <div id="tab-buses" class="admin-tab-content">
+                <div class="card">
+                    <div class="card-header flex-between">
+                        <span><i class="fa-solid fa-bus"></i> MANAGE BUSES</span>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-hover align-middle">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Bus Number</th>
+                                    <th>Reg Number</th>
+                                    <th>QR Code</th>
+                                    <th>Driver</th>
+                                    <th>Route</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for bus in buses %}
+                                <tr>
+                                    <td>#BUS-00{{ bus.id }}</td>
+                                    <td><strong>{{ bus.bus_number }}</strong></td>
+                                    <td><code>{{ bus.registration_number }}</code></td>
+                                    <td><span class="badge bg-primary"><code>{{ bus.qr_code_value }}</code></span></td>
+                                    <td>{{ bus.driver_name }} ({{ bus.driver_phone }})</td>
+                                    <td>{{ bus.route_name }}</td>
+                                    <td>
+                                        <span class="badge {% if bus.status == 'ACTIVE' %}bg-success{% elif bus.status == 'EMERGENCY' %}bg-danger{% else %}bg-secondary{% endif %}">
+                                            {{ bus.status }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-primary" onclick="alert('🚌 BUS QR CODE: {{ bus.qr_code_value }}\n\nURL: {{ bus.qr_image_url }}')">
+                                            <i class="fa-solid fa-qrcode"></i> View QR
+                                        </button>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 3: MANAGE DRIVERS -->
+            <div id="tab-drivers" class="admin-tab-content">
+                <div class="card">
+                    <div class="card-header">
+                        <span><i class="fa-solid fa-id-card"></i> MANAGE DRIVERS</span>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-hover align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Driver ID</th>
+                                    <th>Name</th>
+                                    <th>Phone</th>
+                                    <th>License</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for driver in drivers %}
+                                <tr>
+                                    <td><code>{{ driver.driver_id }}</code></td>
+                                    <td><strong>{{ driver.name }}</strong></td>
+                                    <td>{{ driver.phone }}</td>
+                                    <td>{{ driver.license_number }}</td>
+                                    <td><span class="badge bg-success">{{ driver.status }}</span></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 4: MANAGE STUDENTS -->
+            <div id="tab-students" class="admin-tab-content">
+                <div class="card">
+                    <div class="card-header">
+                        <span><i class="fa-solid fa-graduation-cap"></i> MANAGE STUDENTS</span>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-hover align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Student ID</th>
+                                    <th>Name</th>
+                                    <th>Phone</th>
+                                    <th>Tracked Bus</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for student in students %}
+                                <tr>
+                                    <td><code>{{ student.student_id }}</code></td>
+                                    <td><strong>{{ student.name }}</strong></td>
+                                    <td>{{ student.phone }}</td>
+                                    <td><span class="badge bg-info text-dark">Bus {{ student.selected_bus_id if student.selected_bus_id else 'None' }}</span></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 5: DRIVER REASSIGNMENT -->
+            <div id="tab-assignments" class="admin-tab-content">
+                <div class="card">
+                    <div class="card-header"><i class="fa-solid fa-handshake"></i> REASSIGN DRIVER TO BUS</div>
+                    <div class="card-body">
+                        <p class="text-muted">Dynamic Driver Assignment: Assign Driver B (Suresh) to Bus 2 without changing the Bus 2 identity seen by students.</p>
+
+                        <form id="assign-driver-form" onsubmit="adminAssignDriver(event)" class="row g-3">
+                            <div class="col-md-5">
+                                <label class="form-label">Select Bus:</label>
+                                <select id="assign-bus-id" class="form-select" required>
+                                    {% for bus in buses %}
+                                        <option value="{{ bus.id }}">{{ bus.bus_number }} ({{ bus.registration_number }})</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="col-md-5">
+                                <label class="form-label">Select Driver to Assign:</label>
+                                <select id="assign-driver-id" class="form-select" required>
+                                    {% for driver in drivers %}
+                                        <option value="{{ driver.id }}">{{ driver.name }} ({{ driver.phone }})</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="col-md-2 d-flex align-items-end">
+                                <button type="submit" class="btn btn-primary w-100"><i class="fa-solid fa-check"></i> Assign Driver</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 6: REPLACEMENT BUS SYSTEM -->
+            <div id="tab-replacement" class="admin-tab-content">
+                <div class="card">
+                    <div class="card-header bg-warning text-dark"><i class="fa-solid fa-repeat"></i> ARRANGE REPLACEMENT BUS</div>
+                    <div class="card-body">
+                        <p>Dispatch Replacement Bus 6 for original Bus 2. Sends popup: <em>"Replacement bus arranged for Route 2."</em> and voice announcement: <em>"Replacement bus has been arranged for Route 2."</em></p>
+
+                        <form id="replacement-form" onsubmit="adminArrangeReplacement(event)" class="row g-3">
+                            <div class="col-md-5">
+                                <label class="form-label">Original Bus (Unavailable):</label>
+                                <select id="rep-orig-bus" class="form-select" required>
+                                    {% for bus in buses %}
+                                        <option value="{{ bus.id }}">{{ bus.bus_number }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="col-md-5">
+                                <label class="form-label">Replacement Bus (Spare):</label>
+                                <select id="rep-replacement-bus" class="form-select" required>
+                                    {% for bus in buses %}
+                                        <option value="{{ bus.id }}">{{ bus.bus_number }} ({{ bus.registration_number }})</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="col-md-2 d-flex align-items-end">
+                                <button type="submit" class="btn btn-warning w-100"><i class="fa-solid fa-paper-plane"></i> Dispatch</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 7: EMERGENCIES -->
+            <div id="tab-emergencies" class="admin-tab-content">
+                <div class="card">
+                    <div class="card-header bg-danger text-white"><i class="fa-solid fa-triangle-exclamation"></i> EMERGENCY INCIDENTS</div>
+                    <div class="card-body">
+                        <table class="table table-hover align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Incident ID</th>
+                                    <th>Bus</th>
+                                    <th>Driver Name</th>
+                                    <th>Phone</th>
+                                    <th>Emergency Message</th>
+                                    <th>Time</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for e in emergencies %}
+                                <tr>
+                                    <td>#EMG-{{ e.id }}</td>
+                                    <td><strong>{{ e.bus_number }}</strong></td>
+                                    <td>{{ e.driver_name }}</td>
+                                    <td>{{ e.driver_phone }}</td>
+                                    <td class="text-danger"><strong>{{ e.message }}</strong></td>
+                                    <td>{{ e.created_at }}</td>
+                                    <td>
+                                        <span class="badge {% if e.status == 'ACTIVE' %}bg-danger{% else %}bg-success{% endif %}">
+                                            {{ e.status }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        {% if e.status == 'ACTIVE' %}
+                                            <button class="btn btn-sm btn-success" onclick="resolveEmergency({{ e.id }})"><i class="fa-solid fa-check"></i> Mark Resolved</button>
+                                        {% else %}
+                                            <span class="text-muted">Resolved</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Socket.IO & Leaflet JS -->
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="{{ url_for('static', filename='css/style.css') }}"></script>
+    <script src="{{ url_for('static', filename='js/map.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+
+    <script>
+    function showAdminTab(tabId) {
+        document.querySelectorAll('.admin-tab-content').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.sidebar-menu li').forEach(el => el.classList.remove('active'));
+
+        const targetTab = document.getElementById('tab-' + tabId);
+        if(targetTab) targetTab.classList.add('active');
+
+        const link = document.querySelector(`.sidebar-menu a[href="#tab-${tabId}"]`);
+        if(link) link.parentElement.classList.add('active');
+
+        if(tabId === 'overview') {
+            setTimeout(() => { if(window.adminMap) window.adminMap.invalidateSize(); }, 300);
+        }
+    }
+    </script>
+</body>
+</html>

@@ -1,0 +1,1741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Driver Login | VIGNAN CAMPUS TRANSPORT SYSTEM</title>
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+          rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Your existing CSS -->
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+
+        /* =====================================================
+           DRIVER LOGIN - PREMIUM OVERRIDE
+        ===================================================== */
+
+        :root {
+            --driver-green: #10b981;
+            --driver-green-dark: #047857;
+            --driver-cyan: #06b6d4;
+            --driver-blue: #2563eb;
+
+            --dark-bg: #020617;
+            --glass-bg: rgba(2, 6, 23, 0.72);
+
+            --border: rgba(255,255,255,0.14);
+            --text: #f8fafc;
+            --muted: #94a3b8;
+        }
+
+
+        /* =====================================================
+           GLOBAL
+        ===================================================== */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+
+            font-family:
+            "Plus Jakarta Sans",
+            Arial,
+            sans-serif;
+
+            min-height: 100vh;
+
+            color: var(--text);
+
+            overflow-x: hidden;
+
+            background: #020617;
+
+            position: relative;
+        }
+
+
+        /* =====================================================
+           PREMIUM BUS BACKGROUND
+        ===================================================== */
+
+        body::before {
+
+            content: "";
+
+            position: fixed;
+
+            inset: 0;
+
+            z-index: -10;
+
+            background-image:
+
+            linear-gradient(
+                135deg,
+                rgba(2,6,23,.92),
+                rgba(2,6,23,.72),
+                rgba(6,78,59,.58),
+                rgba(2,6,23,.86)
+            ),
+
+            url("https://stjosephs.ac.in/sliderinfra/Bus7.jpg");
+
+            background-size: cover;
+
+            background-position: center;
+
+            background-attachment: fixed;
+
+            transform: scale(1.05);
+
+            animation:
+            backgroundMove 18s ease-in-out infinite alternate;
+        }
+
+
+        @keyframes backgroundMove {
+
+            0% {
+                transform: scale(1.05);
+            }
+
+            100% {
+                transform: scale(1.12);
+            }
+        }
+
+
+        /* =====================================================
+           DARK OVERLAY
+        ===================================================== */
+
+        body::after {
+
+            content: "";
+
+            position: fixed;
+
+            inset: 0;
+
+            z-index: -9;
+
+            background:
+
+            radial-gradient(
+                circle at 20% 20%,
+                rgba(16,185,129,.18),
+                transparent 28%
+            ),
+
+            radial-gradient(
+                circle at 80% 30%,
+                rgba(6,182,212,.15),
+                transparent 30%
+            ),
+
+            radial-gradient(
+                circle at 50% 90%,
+                rgba(37,99,235,.16),
+                transparent 30%
+            );
+        }
+
+
+        /* =====================================================
+           FLOATING PARTICLES
+        ===================================================== */
+
+        .particles {
+
+            position: fixed;
+
+            inset: 0;
+
+            z-index: -5;
+
+            pointer-events: none;
+
+            overflow: hidden;
+        }
+
+
+        .particle {
+
+            position: absolute;
+
+            width: 4px;
+            height: 4px;
+
+            border-radius: 50%;
+
+            background: #6ee7b7;
+
+            opacity: .45;
+
+            box-shadow:
+            0 0 12px #10b981;
+
+            animation:
+            particleFloat linear infinite;
+        }
+
+
+        .particle:nth-child(1) {
+            left: 8%;
+            animation-duration: 13s;
+        }
+
+        .particle:nth-child(2) {
+            left: 20%;
+            animation-duration: 17s;
+        }
+
+        .particle:nth-child(3) {
+            left: 35%;
+            animation-duration: 15s;
+        }
+
+        .particle:nth-child(4) {
+            left: 52%;
+            animation-duration: 19s;
+        }
+
+        .particle:nth-child(5) {
+            left: 68%;
+            animation-duration: 14s;
+        }
+
+        .particle:nth-child(6) {
+            left: 82%;
+            animation-duration: 18s;
+        }
+
+        .particle:nth-child(7) {
+            left: 94%;
+            animation-duration: 12s;
+        }
+
+
+        @keyframes particleFloat {
+
+            from {
+                transform:
+                translateY(110vh)
+                scale(.4);
+
+                opacity: 0;
+            }
+
+            15% {
+                opacity: .5;
+            }
+
+            85% {
+                opacity: .5;
+            }
+
+            to {
+                transform:
+                translateY(-10vh)
+                scale(1.2);
+
+                opacity: 0;
+            }
+        }
+
+
+        /* =====================================================
+           NAVBAR
+        ===================================================== */
+
+        .navbar {
+
+            position: sticky;
+
+            top: 0;
+
+            z-index: 1000;
+
+            background:
+            rgba(2,6,23,.76);
+
+            backdrop-filter:
+            blur(22px);
+
+            border-bottom:
+            1px solid var(--border);
+
+            box-shadow:
+            0 10px 40px rgba(0,0,0,.35);
+        }
+
+
+        .nav-container {
+
+            max-width: 1450px;
+
+            margin: auto;
+
+            padding:
+            14px 32px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+        }
+
+
+        .nav-brand {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 13px;
+
+            color: white;
+
+            text-decoration: none;
+        }
+
+
+        .brand-icon {
+
+            width: 48px;
+            height: 48px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 15px;
+
+            font-size: 22px;
+
+            color: white;
+
+            background:
+            linear-gradient(
+                135deg,
+                var(--driver-green),
+                var(--driver-cyan)
+            );
+
+            box-shadow:
+            0 0 30px rgba(16,185,129,.4);
+
+            animation:
+            busFloat 3s ease-in-out infinite;
+        }
+
+
+        @keyframes busFloat {
+
+            0%,100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-4px);
+            }
+        }
+
+
+        .brand-text {
+
+            display: flex;
+
+            flex-direction: column;
+        }
+
+
+        .brand-title {
+
+            font-size: 14px;
+
+            font-weight: 800;
+
+            letter-spacing: .4px;
+        }
+
+
+        .brand-subtitle {
+
+            margin-top: 3px;
+
+            color: #6ee7b7;
+
+            font-size: 9px;
+
+            letter-spacing: 2px;
+        }
+
+
+        .nav-links {
+
+            display: flex;
+
+            align-items: center;
+        }
+
+
+        .nav-link {
+
+            color: #cbd5e1;
+
+            text-decoration: none;
+
+            padding: 11px 16px;
+
+            border-radius: 12px;
+
+            transition: .3s;
+        }
+
+
+        .nav-link:hover {
+
+            color: white;
+
+            background:
+            rgba(16,185,129,.12);
+
+            transform:
+            translateY(-2px);
+        }
+
+
+        /* =====================================================
+           LOGIN WRAPPER
+        ===================================================== */
+
+        .login-wrapper {
+
+            min-height:
+            calc(100vh - 78px);
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            padding: 60px 20px;
+
+            position: relative;
+        }
+
+
+        /* =====================================================
+           GLOW BEHIND CARD
+        ===================================================== */
+
+        .login-wrapper::before {
+
+            content: "";
+
+            position: absolute;
+
+            width: 520px;
+            height: 520px;
+
+            border-radius: 50%;
+
+            background:
+            radial-gradient(
+                circle,
+                rgba(16,185,129,.22),
+                transparent 68%
+            );
+
+            filter: blur(20px);
+
+            animation:
+            loginGlow 5s ease-in-out infinite alternate;
+
+            pointer-events: none;
+        }
+
+
+        @keyframes loginGlow {
+
+            from {
+                transform:
+                scale(.82)
+                rotate(0deg);
+            }
+
+            to {
+                transform:
+                scale(1.15)
+                rotate(8deg);
+            }
+        }
+
+
+        /* =====================================================
+           LOGIN CARD
+        ===================================================== */
+
+        .login-card {
+
+            width: 100%;
+
+            max-width: 470px;
+
+            position: relative;
+
+            z-index: 2;
+
+            padding: 38px;
+
+            border-radius: 30px;
+
+            background:
+            linear-gradient(
+                145deg,
+                rgba(15,23,42,.88),
+                rgba(2,6,23,.78)
+            );
+
+            border:
+            1px solid
+            rgba(255,255,255,.16);
+
+            backdrop-filter:
+            blur(25px);
+
+            -webkit-backdrop-filter:
+            blur(25px);
+
+            box-shadow:
+
+            0 30px 100px
+            rgba(0,0,0,.55),
+
+            0 0 70px
+            rgba(16,185,129,.10);
+
+            animation:
+            cardEntrance .9s cubic-bezier(.2,.8,.2,1);
+        }
+
+
+        @keyframes cardEntrance {
+
+            from {
+
+                opacity: 0;
+
+                transform:
+                translateY(45px)
+                scale(.94);
+
+                filter: blur(8px);
+            }
+
+            to {
+
+                opacity: 1;
+
+                transform:
+                translateY(0)
+                scale(1);
+
+                filter: blur(0);
+            }
+        }
+
+
+        /* Top glowing line */
+
+        .login-card::before {
+
+            content: "";
+
+            position: absolute;
+
+            top: 0;
+            left: 12%;
+
+            width: 76%;
+
+            height: 2px;
+
+            border-radius: 50%;
+
+            background:
+            linear-gradient(
+                90deg,
+                transparent,
+                #10b981,
+                #06b6d4,
+                #10b981,
+                transparent
+            );
+
+            box-shadow:
+            0 0 20px #10b981;
+        }
+
+
+        /* =====================================================
+           LOGIN HEADER
+        ===================================================== */
+
+        .login-header {
+
+            text-align: center;
+
+            margin-bottom: 30px;
+        }
+
+
+        .login-logo {
+
+            width: 82px;
+            height: 82px;
+
+            margin:
+            0 auto 20px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 25px;
+
+            font-size: 34px;
+
+            color: white;
+
+            background:
+            linear-gradient(
+                135deg,
+                #059669,
+                #10b981,
+                #06b6d4
+            );
+
+            box-shadow:
+
+            0 15px 45px
+            rgba(16,185,129,.30),
+
+            inset 0 1px 0
+            rgba(255,255,255,.3);
+
+            animation:
+            logoPulse 3s ease-in-out infinite;
+        }
+
+
+        @keyframes logoPulse {
+
+            0%,100% {
+                transform:
+                translateY(0)
+                scale(1);
+            }
+
+            50% {
+                transform:
+                translateY(-5px)
+                scale(1.04);
+            }
+        }
+
+
+        .login-header h2 {
+
+            font-size: 24px;
+
+            font-weight: 800;
+
+            letter-spacing: .5px;
+
+            background:
+            linear-gradient(
+                90deg,
+                #ffffff,
+                #a7f3d0,
+                #67e8f9
+            );
+
+            -webkit-background-clip: text;
+
+            -webkit-text-fill-color:
+            transparent;
+        }
+
+
+        .login-header p {
+
+            margin-top: 10px;
+
+            color: #94a3b8;
+
+            font-size: 13px;
+
+            line-height: 1.6;
+        }
+
+
+        /* =====================================================
+           FORM
+        ===================================================== */
+
+        .login-form {
+
+            margin-top: 10px;
+        }
+
+
+        .form-group {
+
+            margin-bottom: 20px;
+        }
+
+
+        .form-group label {
+
+            display: block;
+
+            margin-bottom: 8px;
+
+            color: #cbd5e1;
+
+            font-size: 12px;
+
+            font-weight: 700;
+
+            letter-spacing: .3px;
+        }
+
+
+        .form-group label i {
+
+            color: #34d399;
+
+            margin-right: 6px;
+        }
+
+
+        /* =====================================================
+           INPUT
+        ===================================================== */
+
+        .form-control {
+
+            width: 100%;
+
+            height: 54px;
+
+            padding:
+            0 17px;
+
+            border-radius: 14px;
+
+            outline: none;
+
+            color: white;
+
+            font-family: inherit;
+
+            font-size: 13px;
+
+            background:
+            rgba(15,23,42,.78);
+
+            border:
+            1px solid
+            rgba(255,255,255,.12);
+
+            transition:
+            .3s;
+        }
+
+
+        .form-control::placeholder {
+
+            color: #64748b;
+        }
+
+
+        .form-control:hover {
+
+            border-color:
+            rgba(16,185,129,.35);
+        }
+
+
+        .form-control:focus {
+
+            border-color:
+            #10b981;
+
+            background:
+            rgba(15,23,42,.95);
+
+            box-shadow:
+            0 0 0 4px
+            rgba(16,185,129,.10),
+
+            0 0 25px
+            rgba(16,185,129,.12);
+
+            transform:
+            translateY(-1px);
+        }
+
+
+        /* =====================================================
+           LOGIN BUTTON
+        ===================================================== */
+
+        .btn {
+
+            border: none;
+
+            cursor: pointer;
+
+            font-family: inherit;
+
+            transition:
+            .3s;
+        }
+
+
+        .btn-success {
+
+            width: 100%;
+
+            height: 56px;
+
+            border-radius: 15px;
+
+            color: white;
+
+            font-size: 13px;
+
+            font-weight: 800;
+
+            letter-spacing: .3px;
+
+            background:
+            linear-gradient(
+                135deg,
+                #047857,
+                #10b981,
+                #06b6d4
+            );
+
+            background-size:
+            200% 200%;
+
+            box-shadow:
+            0 12px 30px
+            rgba(16,185,129,.25);
+
+            position: relative;
+
+            overflow: hidden;
+        }
+
+
+        .btn-success::before {
+
+            content: "";
+
+            position: absolute;
+
+            top: 0;
+
+            left: -100%;
+
+            width: 60%;
+
+            height: 100%;
+
+            background:
+            linear-gradient(
+                90deg,
+                transparent,
+                rgba(255,255,255,.25),
+                transparent
+            );
+
+            transform:
+            skewX(-20deg);
+
+            transition:
+            .6s;
+        }
+
+
+        .btn-success:hover::before {
+
+            left: 140%;
+        }
+
+
+        .btn-success:hover {
+
+            transform:
+            translateY(-3px);
+
+            background-position:
+            100% 50%;
+
+            box-shadow:
+            0 18px 45px
+            rgba(16,185,129,.38);
+        }
+
+
+        .btn-success:active {
+
+            transform:
+            translateY(0)
+            scale(.98);
+        }
+
+
+        /* =====================================================
+           QUICK LOGIN
+        ===================================================== */
+
+        .quick-login-section {
+
+            margin-top: 25px;
+
+            padding: 18px;
+
+            border-radius: 17px;
+
+            background:
+            rgba(16,185,129,.055);
+
+            border:
+            1px solid
+            rgba(16,185,129,.13);
+        }
+
+
+        .quick-login-title {
+
+            color: #a7f3d0;
+
+            font-size: 12px;
+
+            font-weight: 800;
+
+            margin-bottom: 13px;
+
+            text-align: center;
+        }
+
+
+        .quick-login-title i {
+
+            color: #fbbf24;
+
+            margin-right: 5px;
+
+            animation:
+            boltPulse 1.5s infinite;
+        }
+
+
+        @keyframes boltPulse {
+
+            0%,100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.2);
+            }
+        }
+
+
+        .quick-btn-group {
+
+            display: grid;
+
+            grid-template-columns:
+            1fr 1fr;
+
+            gap: 10px;
+        }
+
+
+        .quick-btn-group .btn {
+
+            min-height: 42px;
+
+            border-radius: 11px;
+
+            color: #6ee7b7;
+
+            background:
+            rgba(16,185,129,.08);
+
+            border:
+            1px solid
+            rgba(16,185,129,.25);
+
+            font-size: 11px;
+
+            font-weight: 700;
+        }
+
+
+        .quick-btn-group .btn:hover {
+
+            color: white;
+
+            background:
+            rgba(16,185,129,.18);
+
+            border-color:
+            rgba(16,185,129,.55);
+
+            transform:
+            translateY(-2px);
+        }
+
+
+        /* =====================================================
+           ADMIN LINK
+        ===================================================== */
+
+        .text-center {
+
+            text-align: center;
+        }
+
+
+        .text-muted {
+
+            color: #94a3b8;
+
+            text-decoration: none;
+
+            font-size: 12px;
+
+            transition: .3s;
+        }
+
+
+        .text-muted:hover {
+
+            color: #6ee7b7;
+        }
+
+
+        /* =====================================================
+           FLASH ALERT
+        ===================================================== */
+
+        .flash-container {
+
+            position: fixed;
+
+            top: 90px;
+
+            right: 25px;
+
+            width: 340px;
+
+            z-index: 3000;
+        }
+
+
+        .alert {
+
+            padding: 14px 16px;
+
+            margin-bottom: 10px;
+
+            border-radius: 14px;
+
+            color: white;
+
+            background:
+            rgba(15,23,42,.92);
+
+            backdrop-filter:
+            blur(18px);
+
+            border:
+            1px solid
+            rgba(255,255,255,.15);
+
+            box-shadow:
+            0 15px 40px
+            rgba(0,0,0,.35);
+
+            animation:
+            alertIn .4s ease;
+        }
+
+
+        @keyframes alertIn {
+
+            from {
+
+                opacity: 0;
+
+                transform:
+                translateX(35px);
+            }
+
+            to {
+
+                opacity: 1;
+
+                transform:
+                translateX(0);
+            }
+        }
+
+
+        .btn-close {
+
+            float: right;
+
+            background: none;
+
+            border: none;
+
+            color: white;
+
+            font-size: 20px;
+
+            cursor: pointer;
+        }
+
+
+        /* =====================================================
+           DRIVER STATUS
+        ===================================================== */
+
+        .driver-status {
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            gap: 8px;
+
+            margin-top: 22px;
+
+            color: #94a3b8;
+
+            font-size: 10px;
+
+            letter-spacing: .4px;
+        }
+
+
+        .status-dot {
+
+            width: 8px;
+            height: 8px;
+
+            border-radius: 50%;
+
+            background: #22c55e;
+
+            box-shadow:
+            0 0 12px #22c55e;
+
+            animation:
+            statusPulse 1.5s infinite;
+        }
+
+
+        @keyframes statusPulse {
+
+            0%,100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: .5;
+                transform: scale(1.5);
+            }
+        }
+
+
+        /* =====================================================
+           RESPONSIVE
+        ===================================================== */
+
+        @media(max-width:600px) {
+
+            .nav-container {
+
+                padding:
+                12px 15px;
+            }
+
+            .brand-title {
+
+                font-size: 10px;
+            }
+
+            .brand-subtitle {
+
+                display: none;
+            }
+
+            .login-wrapper {
+
+                padding:
+                35px 15px;
+            }
+
+            .login-card {
+
+                padding: 28px 22px;
+
+                border-radius: 24px;
+            }
+
+            .login-logo {
+
+                width: 72px;
+                height: 72px;
+
+                font-size: 29px;
+            }
+
+            .login-header h2 {
+
+                font-size: 20px;
+            }
+
+            .quick-btn-group {
+
+                grid-template-columns:
+                1fr;
+            }
+
+            .flash-container {
+
+                left: 15px;
+
+                right: 15px;
+
+                width: auto;
+            }
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     FLOATING PARTICLES
+===================================================== -->
+
+<div class="particles">
+
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+
+</div>
+
+
+<!-- =====================================================
+     NAVBAR
+===================================================== -->
+
+<nav class="navbar">
+
+    <div class="nav-container">
+
+        <a href="/" class="nav-brand">
+
+            <i class="fa-solid fa-bus-simple brand-icon"></i>
+
+            <div class="brand-text">
+
+                <span class="brand-title">
+                    VIGNAN CAMPUS TRANSPORT SYSTEM
+                </span>
+
+                <span class="brand-subtitle">
+                    DRIVER PORTAL LOGIN
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <div class="nav-links">
+
+            <a href="/" class="nav-link">
+
+                <i class="fa-solid fa-house"></i>
+
+                &nbsp; Home
+
+            </a>
+
+        </div>
+
+    </div>
+
+</nav>
+
+
+<!-- =====================================================
+     FLASH MESSAGES
+===================================================== -->
+
+<div class="flash-container">
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+
+        {% if messages %}
+
+            {% for category, message in messages %}
+
+                <div class="alert alert-{{ category }}"
+                     role="alert">
+
+                    <i class="fa-solid fa-circle-info"></i>
+
+                    &nbsp; {{ message }}
+
+                    <button
+                        type="button"
+                        class="btn-close"
+                        onclick="this.parentElement.remove()">
+
+                        &times;
+
+                    </button>
+
+                </div>
+
+            {% endfor %}
+
+        {% endif %}
+
+    {% endwith %}
+
+</div>
+
+
+<!-- =====================================================
+     LOGIN
+===================================================== -->
+
+<div class="login-wrapper">
+
+
+    <div class="login-card">
+
+
+        <!-- HEADER -->
+
+        <div class="login-header">
+
+
+            <div class="login-logo driver-theme">
+
+                <i class="fa-solid fa-id-card"></i>
+
+            </div>
+
+
+            <h2>
+                DRIVER PORTAL LOGIN
+            </h2>
+
+
+            <p>
+                Securely access your assigned bus,
+                live GPS sharing and trip controls.
+            </p>
+
+
+        </div>
+
+
+        <!-- LOGIN FORM -->
+
+        <form
+            action="/login/driver"
+            method="POST"
+            class="login-form"
+            id="driverLoginForm">
+
+
+            <!-- DRIVER ID -->
+
+            <div class="form-group">
+
+                <label for="driver_id">
+
+                    <i class="fa-solid fa-id-badge"></i>
+
+                    Driver Login ID
+
+                </label>
+
+
+                <input
+
+                    type="text"
+
+                    name="driver_id"
+
+                    id="driver_id"
+
+                    class="form-control"
+
+                    placeholder="e.g. DRV001 or DRV002"
+
+                    autocomplete="username"
+
+                    required
+
+                    autofocus
+
+                >
+
+            </div>
+
+
+            <!-- PASSWORD -->
+
+            <div class="form-group">
+
+                <label for="password">
+
+                    <i class="fa-solid fa-lock"></i>
+
+                    Password
+
+                </label>
+
+
+                <input
+
+                    type="password"
+
+                    name="password"
+
+                    id="password"
+
+                    class="form-control"
+
+                    placeholder="Enter your password"
+
+                    autocomplete="current-password"
+
+                    required
+
+                >
+
+            </div>
+
+
+            <!-- LOGIN -->
+
+            <button
+
+                type="submit"
+
+                class="btn btn-success"
+
+                id="loginButton">
+
+                <i class="fa-solid fa-right-to-bracket"></i>
+
+                <span id="loginText">
+                    Login to Driver Dashboard
+                </span>
+
+            </button>
+
+
+        </form>
+
+
+        <!-- =================================================
+             DEMO QUICK LOGIN
+        ================================================= -->
+
+        <div class="quick-login-section">
+
+
+            <div class="quick-login-title">
+
+                <i class="fa-solid fa-bolt"></i>
+
+                DEMO QUICK FILL
+
+            </div>
+
+
+            <div class="quick-btn-group">
+
+
+                <button
+
+                    type="button"
+
+                    class="btn btn-outline-success"
+
+                    onclick="
+                    document.getElementById('driver_id').value='DRV001';
+                    document.getElementById('password').value='password123';
+                    animateInput('driver_id');
+                    ">
+
+                    <i class="fa-solid fa-bus"></i>
+
+                    Driver A — Bus 1
+
+                </button>
+
+
+                <button
+
+                    type="button"
+
+                    class="btn btn-outline-success"
+
+                    onclick="
+                    document.getElementById('driver_id').value='DRV002';
+                    document.getElementById('password').value='password123';
+                    animateInput('driver_id');
+                    ">
+
+                    <i class="fa-solid fa-bus"></i>
+
+                    Driver B — Bus 2
+
+                </button>
+
+
+            </div>
+
+        </div>
+
+
+        <!-- ADMIN -->
+
+        <div class="text-center" style="margin-top:22px;">
+
+            <a
+                href="/login/admin"
+                class="text-muted">
+
+                <i class="fa-solid fa-user-shield"></i>
+
+                &nbsp; Admin Login →
+
+            </a>
+
+        </div>
+
+
+        <!-- SERVER STATUS -->
+
+        <div class="driver-status">
+
+            <span class="status-dot"></span>
+
+            Secure Driver Authentication System
+
+            <span>•</span>
+
+            <span>ONLINE</span>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     JAVASCRIPT
+===================================================== -->
+
+<script>
+
+
+/* =====================================================
+   INPUT ANIMATION
+===================================================== */
+
+function animateInput(id) {
+
+    const input =
+    document.getElementById(id);
+
+    input.style.transform =
+    "scale(1.02)";
+
+    input.style.borderColor =
+    "#10b981";
+
+    setTimeout(() => {
+
+        input.style.transform =
+        "scale(1)";
+
+    }, 250);
+}
+
+
+/* =====================================================
+   LOGIN LOADING EFFECT
+===================================================== */
+
+const loginForm =
+document.getElementById(
+    "driverLoginForm"
+);
+
+
+loginForm.addEventListener(
+    "submit",
+    function() {
+
+        const button =
+        document.getElementById(
+            "loginButton"
+        );
+
+        const text =
+        document.getElementById(
+            "loginText"
+        );
+
+
+        button.disabled = true;
+
+        button.style.opacity = ".85";
+
+        text.innerHTML =
+        '<i class="fa-solid fa-spinner fa-spin"></i> Authenticating...';
+
+    }
+);
+
+
+/* =====================================================
+   MOUSE PARALLAX
+===================================================== */
+
+document.addEventListener(
+    "mousemove",
+    function(e) {
+
+        const card =
+        document.querySelector(
+            ".login-card"
+        );
+
+        if (!card)
+            return;
+
+
+        const x =
+        (e.clientX /
+        window.innerWidth - .5);
+
+
+        const y =
+        (e.clientY /
+        window.innerHeight - .5);
+
+
+        card.style.transform =
+        "translate(" +
+        x * 5 +
+        "px," +
+        y * 5 +
+        "px)";
+    }
+);
+
+
+/* =====================================================
+   REMOVE PARALLAX ON MOBILE
+===================================================== */
+
+window.addEventListener(
+    "resize",
+    function() {
+
+        if (window.innerWidth <= 700) {
+
+            const card =
+            document.querySelector(
+                ".login-card"
+            );
+
+            if (card) {
+
+                card.style.transform =
+                "none";
+            }
+        }
+
+    }
+);
+
+
+</script>
+
+
+</body>
+</html>

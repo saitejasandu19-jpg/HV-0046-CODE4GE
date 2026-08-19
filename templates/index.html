@@ -1,0 +1,2647 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>
+VIGNAN CAMPUS TRANSPORT SYSTEM | Smart • Safe • Live • Connected
+</title>
+
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+rel="stylesheet">
+
+<!-- Font Awesome -->
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+
+<style>
+
+/* =====================================================
+   ROOT
+===================================================== */
+
+:root{
+
+    --primary:#4f46e5;
+    --primary2:#7c3aed;
+
+    --cyan:#06b6d4;
+    --green:#10b981;
+
+    --red:#ef4444;
+    --orange:#f59e0b;
+
+    --white:#ffffff;
+
+    --text:#f8fafc;
+    --muted:#cbd5e1;
+
+    --glass:rgba(15,23,42,.58);
+
+    --border:rgba(255,255,255,.16);
+
+}
+
+
+/* =====================================================
+   GLOBAL
+===================================================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+
+    font-family:
+    "Plus Jakarta Sans",
+    Arial,
+    sans-serif;
+
+    color:var(--text);
+
+    min-height:100vh;
+
+    overflow-x:hidden;
+
+    background:#020617;
+
+}
+
+
+/* =====================================================
+   BACKGROUND IMAGE
+===================================================== */
+
+body::before{
+
+    content:"";
+
+    position:fixed;
+
+    inset:0;
+
+    z-index:-10;
+
+    background-image:
+
+    linear-gradient(
+        120deg,
+        rgba(2,6,23,.94),
+        rgba(15,23,42,.72),
+        rgba(30,41,59,.62)
+    ),
+
+    url("https://stjosephs.ac.in/sliderinfra/Bus7.jpg");
+
+    background-size:cover;
+
+    background-position:center;
+
+    background-attachment:fixed;
+
+    transform:scale(1.04);
+
+    animation:
+    backgroundZoom 18s ease-in-out infinite alternate;
+
+}
+
+@keyframes backgroundZoom{
+
+    from{
+        transform:scale(1.04);
+    }
+
+    to{
+        transform:scale(1.12);
+    }
+
+}
+
+
+/* =====================================================
+   MOVING LIGHT
+===================================================== */
+
+body::after{
+
+    content:"";
+
+    position:fixed;
+
+    inset:-50%;
+
+    z-index:-8;
+
+    background:
+
+    radial-gradient(
+        circle at 20% 30%,
+        rgba(79,70,229,.22),
+        transparent 25%
+    ),
+
+    radial-gradient(
+        circle at 80% 20%,
+        rgba(6,182,212,.18),
+        transparent 25%
+    ),
+
+    radial-gradient(
+        circle at 50% 80%,
+        rgba(124,58,237,.18),
+        transparent 25%
+    );
+
+    animation:
+    lightMove 14s ease-in-out infinite alternate;
+
+}
+
+@keyframes lightMove{
+
+    0%{
+        transform:translate(-3%,-2%) rotate(0deg);
+    }
+
+    50%{
+        transform:translate(3%,2%) rotate(2deg);
+    }
+
+    100%{
+        transform:translate(-2%,3%) rotate(-2deg);
+    }
+
+}
+
+
+/* =====================================================
+   PARTICLES
+===================================================== */
+
+.particle{
+
+    position:fixed;
+
+    width:4px;
+    height:4px;
+
+    background:white;
+
+    border-radius:50%;
+
+    opacity:.35;
+
+    pointer-events:none;
+
+    z-index:-2;
+
+    animation:
+    floatParticle linear infinite;
+
+}
+
+.p1{
+    left:8%;
+    animation-duration:12s;
+}
+
+.p2{
+    left:22%;
+    animation-duration:18s;
+}
+
+.p3{
+    left:37%;
+    animation-duration:14s;
+}
+
+.p4{
+    left:55%;
+    animation-duration:20s;
+}
+
+.p5{
+    left:72%;
+    animation-duration:16s;
+}
+
+.p6{
+    left:88%;
+    animation-duration:13s;
+}
+
+@keyframes floatParticle{
+
+    from{
+        transform:translateY(110vh);
+        opacity:0;
+    }
+
+    15%{
+        opacity:.5;
+    }
+
+    85%{
+        opacity:.5;
+    }
+
+    to{
+        transform:translateY(-10vh);
+        opacity:0;
+    }
+
+}
+
+
+/* =====================================================
+   NAVBAR
+===================================================== */
+
+.navbar{
+
+    position:sticky;
+
+    top:0;
+
+    z-index:1000;
+
+    background:
+    rgba(2,6,23,.72);
+
+    backdrop-filter:
+    blur(20px);
+
+    border-bottom:
+    1px solid var(--border);
+
+    box-shadow:
+    0 10px 40px rgba(0,0,0,.25);
+
+}
+
+.nav-container{
+
+    max-width:1400px;
+
+    margin:auto;
+
+    padding:
+    15px 30px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    gap:20px;
+
+}
+
+.nav-brand{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:13px;
+
+    color:white;
+
+    text-decoration:none;
+
+}
+
+.brand-icon{
+
+    width:48px;
+    height:48px;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    border-radius:14px;
+
+    font-size:23px;
+
+    background:
+    linear-gradient(
+        135deg,
+        var(--primary),
+        var(--cyan)
+    );
+
+    box-shadow:
+    0 0 25px rgba(79,70,229,.5);
+
+    animation:
+    iconFloat 3s ease-in-out infinite;
+
+}
+
+@keyframes iconFloat{
+
+    0%,100%{
+        transform:translateY(0);
+    }
+
+    50%{
+        transform:translateY(-4px);
+    }
+
+}
+
+.brand-text{
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+.brand-title{
+
+    font-size:15px;
+
+    font-weight:800;
+
+    letter-spacing:.3px;
+
+}
+
+.brand-subtitle{
+
+    font-size:9px;
+
+    color:#94a3b8;
+
+    letter-spacing:2px;
+
+    margin-top:3px;
+
+}
+
+.nav-links{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+}
+
+.nav-link{
+
+    color:#cbd5e1;
+
+    text-decoration:none;
+
+    padding:
+    10px 14px;
+
+    border-radius:10px;
+
+    transition:.3s;
+
+}
+
+.nav-link:hover{
+
+    color:white;
+
+    background:
+    rgba(255,255,255,.09);
+
+    transform:translateY(-2px);
+
+}
+
+
+/* =====================================================
+   BUTTONS
+===================================================== */
+
+.btn{
+
+    border:0;
+
+    text-decoration:none;
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:9px;
+
+    cursor:pointer;
+
+    transition:
+    transform .3s,
+    box-shadow .3s,
+    background .3s;
+
+}
+
+.btn:hover{
+
+    transform:
+    translateY(-3px);
+
+}
+
+.btn-sm{
+
+    padding:
+    10px 16px;
+
+    border-radius:10px;
+
+}
+
+.btn-primary{
+
+    color:white;
+
+    background:
+    linear-gradient(
+        135deg,
+        #4f46e5,
+        #7c3aed
+    );
+
+    box-shadow:
+    0 8px 25px
+    rgba(79,70,229,.35);
+
+}
+
+.btn-primary:hover{
+
+    box-shadow:
+    0 14px 35px
+    rgba(79,70,229,.55);
+
+}
+
+.btn-success{
+
+    color:white;
+
+    background:
+    linear-gradient(
+        135deg,
+        #059669,
+        #10b981
+    );
+
+    box-shadow:
+    0 8px 25px
+    rgba(16,185,129,.3);
+
+}
+
+.btn-dark{
+
+    color:white;
+
+    background:
+    linear-gradient(
+        135deg,
+        #334155,
+        #0f172a
+    );
+
+}
+
+.btn-outline-danger{
+
+    color:#fecaca;
+
+    border:
+    1px solid rgba(239,68,68,.45);
+
+    background:
+    rgba(239,68,68,.1);
+
+}
+
+.btn-block{
+
+    width:100%;
+
+}
+
+
+/* =====================================================
+   HERO
+===================================================== */
+
+.hero-section{
+
+    min-height:
+    650px;
+
+    max-width:
+    1400px;
+
+    margin:auto;
+
+    padding:
+    110px 30px 70px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+    text-align:center;
+
+    position:relative;
+
+}
+
+
+/* Glow behind hero */
+
+.hero-section::before{
+
+    content:"";
+
+    position:absolute;
+
+    width:500px;
+    height:500px;
+
+    border-radius:50%;
+
+    background:
+    radial-gradient(
+        circle,
+        rgba(79,70,229,.28),
+        transparent 70%
+    );
+
+    filter:blur(20px);
+
+    z-index:-1;
+
+    animation:
+    heroGlow 5s ease-in-out infinite alternate;
+
+}
+
+@keyframes heroGlow{
+
+    from{
+        transform:scale(.8);
+    }
+
+    to{
+        transform:scale(1.15);
+    }
+
+}
+
+
+.hero-content{
+
+    max-width:1050px;
+
+    animation:
+    heroEnter 1s ease both;
+
+}
+
+@keyframes heroEnter{
+
+    from{
+
+        opacity:0;
+
+        transform:
+        translateY(40px)
+        scale(.96);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:
+        translateY(0)
+        scale(1);
+
+    }
+
+}
+
+
+.hero-badge{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    padding:
+    9px 17px;
+
+    border-radius:50px;
+
+    color:#e0e7ff;
+
+    background:
+    rgba(79,70,229,.17);
+
+    border:
+    1px solid
+    rgba(129,140,248,.35);
+
+    backdrop-filter:
+    blur(10px);
+
+    font-size:12px;
+
+    font-weight:700;
+
+    letter-spacing:.4px;
+
+    box-shadow:
+    0 0 25px
+    rgba(79,70,229,.15);
+
+}
+
+.hero-badge i{
+
+    color:#67e8f9;
+
+    animation:
+    shieldPulse 2s infinite;
+
+}
+
+@keyframes shieldPulse{
+
+    0%,100%{
+        transform:scale(1);
+    }
+
+    50%{
+        transform:scale(1.2);
+    }
+
+}
+
+
+.hero-title{
+
+    margin-top:25px;
+
+    font-size:
+    clamp(40px,6vw,78px);
+
+    line-height:1.03;
+
+    font-weight:800;
+
+    letter-spacing:-2px;
+
+    background:
+    linear-gradient(
+        90deg,
+        #ffffff,
+        #c7d2fe,
+        #67e8f9,
+        #ffffff
+    );
+
+    background-size:
+    300% auto;
+
+    -webkit-background-clip:text;
+
+    -webkit-text-fill-color:
+    transparent;
+
+    animation:
+    titleShine 5s linear infinite;
+
+}
+
+@keyframes titleShine{
+
+    to{
+        background-position:
+        300% center;
+    }
+
+}
+
+
+.hero-subtitle{
+
+    margin-top:18px;
+
+    font-size:22px;
+
+    font-weight:700;
+
+    color:#67e8f9;
+
+    letter-spacing:3px;
+
+}
+
+
+.hero-desc{
+
+    max-width:900px;
+
+    margin:
+    20px auto 0;
+
+    color:#cbd5e1;
+
+    line-height:1.8;
+
+    font-size:15px;
+
+}
+
+
+/* =====================================================
+   STATS
+===================================================== */
+
+.hero-stats{
+
+    width:100%;
+
+    max-width:1100px;
+
+    margin-top:55px;
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(4,1fr);
+
+    gap:15px;
+
+}
+
+.stat-card{
+
+    padding:20px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:15px;
+
+    text-align:left;
+
+    background:
+    rgba(15,23,42,.58);
+
+    border:
+    1px solid
+    rgba(255,255,255,.12);
+
+    border-radius:18px;
+
+    backdrop-filter:
+    blur(15px);
+
+    box-shadow:
+    0 15px 40px
+    rgba(0,0,0,.18);
+
+    transition:.35s;
+
+    animation:
+    statEnter .8s ease both;
+
+}
+
+.stat-card:nth-child(2){
+    animation-delay:.1s;
+}
+
+.stat-card:nth-child(3){
+    animation-delay:.2s;
+}
+
+.stat-card:nth-child(4){
+    animation-delay:.3s;
+}
+
+@keyframes statEnter{
+
+    from{
+
+        opacity:0;
+
+        transform:
+        translateY(25px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:
+        translateY(0);
+
+    }
+
+}
+
+.stat-card:hover{
+
+    transform:
+    translateY(-8px);
+
+    border-color:
+    rgba(103,232,249,.35);
+
+    box-shadow:
+    0 20px 50px
+    rgba(0,0,0,.3);
+
+}
+
+.stat-icon{
+
+    width:48px;
+    height:48px;
+
+    flex-shrink:0;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    border-radius:13px;
+
+    font-size:20px;
+
+}
+
+.stat-icon.blue{
+
+    color:#a5b4fc;
+
+    background:
+    rgba(79,70,229,.22);
+
+}
+
+.stat-icon.green{
+
+    color:#6ee7b7;
+
+    background:
+    rgba(16,185,129,.18);
+
+}
+
+.stat-icon.red{
+
+    color:#fca5a5;
+
+    background:
+    rgba(239,68,68,.18);
+
+}
+
+.stat-value{
+
+    display:block;
+
+    font-size:19px;
+
+    font-weight:800;
+
+}
+
+.stat-label{
+
+    display:block;
+
+    color:#94a3b8;
+
+    font-size:11px;
+
+    margin-top:3px;
+
+}
+
+
+/* =====================================================
+   CONTAINER
+===================================================== */
+
+.container{
+
+    max-width:1300px;
+
+    margin:auto;
+
+    padding:
+    0 30px;
+
+}
+
+.section-padding{
+
+    padding-top:60px;
+
+    padding-bottom:70px;
+
+}
+
+.section-title{
+
+    font-size:34px;
+
+    font-weight:800;
+
+}
+
+.section-subtitle{
+
+    margin-top:10px;
+
+    color:#94a3b8;
+
+    font-size:14px;
+
+}
+
+.text-center{
+
+    text-align:center;
+
+}
+
+
+/* =====================================================
+   PORTAL GRID
+===================================================== */
+
+.portal-grid{
+
+    margin-top:40px;
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(3,1fr);
+
+    gap:22px;
+
+}
+
+.portal-card{
+
+    position:relative;
+
+    overflow:hidden;
+
+    padding:28px;
+
+    border-radius:24px;
+
+    background:
+    rgba(15,23,42,.64);
+
+    border:
+    1px solid
+    rgba(255,255,255,.12);
+
+    backdrop-filter:
+    blur(18px);
+
+    box-shadow:
+    0 20px 60px
+    rgba(0,0,0,.22);
+
+    transition:
+    transform .4s,
+    border .4s,
+    box-shadow .4s;
+
+    animation:
+    portalEnter .8s ease both;
+
+}
+
+.portal-card:nth-child(2){
+    animation-delay:.15s;
+}
+
+.portal-card:nth-child(3){
+    animation-delay:.3s;
+}
+
+@keyframes portalEnter{
+
+    from{
+
+        opacity:0;
+
+        transform:
+        translateY(45px)
+        rotateX(8deg);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:
+        translateY(0)
+        rotateX(0);
+
+    }
+
+}
+
+.portal-card::before{
+
+    content:"";
+
+    position:absolute;
+
+    width:180px;
+    height:180px;
+
+    top:-90px;
+    right:-90px;
+
+    border-radius:50%;
+
+    background:
+    rgba(79,70,229,.18);
+
+    transition:.5s;
+
+}
+
+.portal-card:hover{
+
+    transform:
+    translateY(-12px)
+    scale(1.015);
+
+    border-color:
+    rgba(103,232,249,.35);
+
+    box-shadow:
+    0 30px 80px
+    rgba(0,0,0,.4);
+
+}
+
+.portal-card:hover::before{
+
+    transform:scale(2);
+
+}
+
+
+.portal-card-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+}
+
+.portal-icon{
+
+    width:55px;
+    height:55px;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    border-radius:16px;
+
+    font-size:23px;
+
+    background:
+    linear-gradient(
+        135deg,
+        rgba(79,70,229,.9),
+        rgba(6,182,212,.8)
+    );
+
+    box-shadow:
+    0 10px 30px
+    rgba(79,70,229,.25);
+
+    transition:.4s;
+
+}
+
+.portal-card:hover
+.portal-icon{
+
+    transform:
+    rotate(-8deg)
+    scale(1.12);
+
+}
+
+
+.portal-tag{
+
+    font-size:10px;
+
+    padding:
+    7px 11px;
+
+    border-radius:30px;
+
+    color:#cbd5e1;
+
+    background:
+    rgba(255,255,255,.07);
+
+    border:
+    1px solid
+    rgba(255,255,255,.1);
+
+}
+
+
+.portal-card h3{
+
+    margin-top:25px;
+
+    font-size:21px;
+
+}
+
+
+.portal-card > p{
+
+    margin-top:12px;
+
+    color:#94a3b8;
+
+    line-height:1.7;
+
+    font-size:13px;
+
+}
+
+
+.portal-features{
+
+    list-style:none;
+
+    margin-top:20px;
+
+}
+
+.portal-features li{
+
+    display:flex;
+
+    gap:9px;
+
+    color:#cbd5e1;
+
+    font-size:12px;
+
+    line-height:1.6;
+
+    padding:7px 0;
+
+}
+
+.portal-features i{
+
+    color:#34d399;
+
+    margin-top:3px;
+
+}
+
+
+.portal-btn{
+
+    margin-top:22px;
+
+    padding:13px;
+
+    border-radius:12px;
+
+    font-weight:700;
+
+}
+
+
+/* =====================================================
+   DEMO SECTION
+===================================================== */
+
+.campus-preview-section{
+
+    padding:
+    20px 0 70px;
+
+}
+
+.preview-card{
+
+    max-width:1100px;
+
+    margin:auto;
+
+    padding:30px;
+
+    border-radius:22px;
+
+    background:
+    rgba(15,23,42,.65);
+
+    border:
+    1px solid
+    rgba(255,255,255,.12);
+
+    backdrop-filter:
+    blur(18px);
+
+    box-shadow:
+    0 20px 60px
+    rgba(0,0,0,.25);
+
+}
+
+.preview-card h2{
+
+    font-size:22px;
+
+    margin-bottom:22px;
+
+}
+
+.preview-card h2 i{
+
+    color:#67e8f9;
+
+}
+
+.cred-grid{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(2,1fr);
+
+    gap:12px;
+
+}
+
+.cred-item{
+
+    padding:15px;
+
+    border-radius:12px;
+
+    background:
+    rgba(255,255,255,.05);
+
+    border:
+    1px solid
+    rgba(255,255,255,.08);
+
+    color:#cbd5e1;
+
+    font-size:12px;
+
+    transition:.3s;
+
+}
+
+.cred-item:hover{
+
+    background:
+    rgba(79,70,229,.12);
+
+    transform:
+    translateY(-3px);
+
+}
+
+code{
+
+    padding:
+    4px 7px;
+
+    border-radius:5px;
+
+    color:#67e8f9;
+
+    background:
+    rgba(6,182,212,.12);
+
+}
+
+
+/* =====================================================
+   FOOTER
+===================================================== */
+
+.footer{
+
+    border-top:
+    1px solid
+    rgba(255,255,255,.1);
+
+    background:
+    rgba(2,6,23,.75);
+
+    backdrop-filter:
+    blur(15px);
+
+}
+
+.footer-container{
+
+    max-width:1300px;
+
+    margin:auto;
+
+    padding:
+    25px 30px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    gap:20px;
+
+    color:#64748b;
+
+    font-size:11px;
+
+}
+
+.footer-status{
+
+    color:#94a3b8;
+
+}
+
+.status-indicator{
+
+    width:8px;
+    height:8px;
+
+    display:inline-block;
+
+    border-radius:50%;
+
+    margin-right:6px;
+
+}
+
+.status-indicator.online{
+
+    background:#22c55e;
+
+    box-shadow:
+    0 0 12px
+    #22c55e;
+
+    animation:
+    onlinePulse 1.5s infinite;
+
+}
+
+@keyframes onlinePulse{
+
+    0%,100%{
+        opacity:1;
+        transform:scale(1);
+    }
+
+    50%{
+        opacity:.5;
+        transform:scale(1.5);
+    }
+
+}
+
+
+/* =====================================================
+   FLASH
+===================================================== */
+
+.flash-container{
+
+    position:fixed;
+
+    top:85px;
+    right:25px;
+
+    z-index:2000;
+
+    width:320px;
+
+}
+
+.alert{
+
+    padding:14px 16px;
+
+    margin-bottom:10px;
+
+    border-radius:12px;
+
+    background:
+    rgba(15,23,42,.9);
+
+    backdrop-filter:
+    blur(15px);
+
+    border:
+    1px solid
+    rgba(255,255,255,.15);
+
+    box-shadow:
+    0 15px 40px
+    rgba(0,0,0,.3);
+
+    animation:
+    alertIn .4s ease;
+
+}
+
+@keyframes alertIn{
+
+    from{
+        opacity:0;
+        transform:
+        translateX(30px);
+    }
+
+    to{
+        opacity:1;
+        transform:
+        translateX(0);
+    }
+
+}
+
+
+/* =====================================================
+   SCROLL REVEAL
+===================================================== */
+
+.reveal{
+
+    opacity:0;
+
+    transform:
+    translateY(35px);
+
+    transition:
+    opacity .8s ease,
+    transform .8s ease;
+
+}
+
+.reveal.show{
+
+    opacity:1;
+
+    transform:
+    translateY(0);
+
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media(max-width:1000px){
+
+    .hero-stats{
+
+        grid-template-columns:
+        repeat(2,1fr);
+
+    }
+
+    .portal-grid{
+
+        grid-template-columns:
+        1fr;
+
+        max-width:700px;
+
+        margin-left:auto;
+        margin-right:auto;
+
+    }
+
+}
+
+@media(max-width:700px){
+
+    .nav-container{
+
+        padding:
+        12px 15px;
+
+    }
+
+    .brand-title{
+
+        font-size:11px;
+
+    }
+
+    .brand-subtitle{
+
+        display:none;
+
+    }
+
+    .nav-links{
+
+        display:none;
+
+    }
+
+    .hero-section{
+
+        min-height:
+        620px;
+
+        padding:
+        80px 18px 50px;
+
+    }
+
+    .hero-title{
+
+        font-size:
+        38px;
+
+        letter-spacing:
+        -1px;
+
+    }
+
+    .hero-subtitle{
+
+        font-size:
+        15px;
+
+        letter-spacing:
+        2px;
+
+    }
+
+    .hero-desc{
+
+        font-size:
+        13px;
+
+    }
+
+    .hero-stats{
+
+        grid-template-columns:
+        1fr;
+
+        margin-top:35px;
+
+    }
+
+    .container{
+
+        padding:
+        0 15px;
+
+    }
+
+    .section-title{
+
+        font-size:
+        27px;
+
+    }
+
+    .cred-grid{
+
+        grid-template-columns:
+        1fr;
+
+    }
+
+    .footer-container{
+
+        flex-direction:
+        column;
+
+        text-align:center;
+
+    }
+
+    .flash-container{
+
+        left:15px;
+
+        right:15px;
+
+        width:auto;
+
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- PARTICLES -->
+
+<div class="particle p1"></div>
+<div class="particle p2"></div>
+<div class="particle p3"></div>
+<div class="particle p4"></div>
+<div class="particle p5"></div>
+<div class="particle p6"></div>
+
+
+<!-- =====================================================
+     NAVBAR
+===================================================== -->
+
+<nav class="navbar">
+
+<div class="nav-container">
+
+
+<a href="/" class="nav-brand">
+
+<div class="brand-icon">
+
+<i class="fa-solid fa-bus-simple"></i>
+
+</div>
+
+
+<div class="brand-text">
+
+<span class="brand-title">
+VIGNAN CAMPUS TRANSPORT SYSTEM
+</span>
+
+<span class="brand-subtitle">
+ENGINEERING COLLEGE TRANSIT
+</span>
+
+</div>
+
+</a>
+
+
+<div class="nav-links">
+
+
+<a href="/"
+class="nav-link">
+
+<i class="fa-solid fa-house"></i>
+
+Home
+
+</a>
+
+
+{% if session.role %}
+
+
+{% if session.role == 'STUDENT' %}
+
+<a href="/student/dashboard"
+class="nav-link">
+
+<i class="fa-solid fa-graduation-cap"></i>
+
+Student Dashboard
+
+</a>
+
+{% elif session.role == 'DRIVER' %}
+
+<a href="/driver/dashboard"
+class="nav-link">
+
+<i class="fa-solid fa-id-card"></i>
+
+Driver Dashboard
+
+</a>
+
+{% elif session.role == 'ADMIN' %}
+
+<a href="/admin/dashboard"
+class="nav-link">
+
+<i class="fa-solid fa-user-shield"></i>
+
+Admin Panel
+
+</a>
+
+{% endif %}
+
+
+<a href="/logout"
+class="btn btn-sm btn-outline-danger">
+
+<i class="fa-solid fa-right-from-bracket"></i>
+
+Logout
+
+({{ session.display_name }})
+
+</a>
+
+
+{% else %}
+
+
+<a href="/login/student"
+class="btn btn-sm btn-primary">
+
+<i class="fa-solid fa-right-to-bracket"></i>
+
+Student Login
+
+</a>
+
+
+{% endif %}
+
+
+</div>
+
+</div>
+
+</nav>
+
+
+<!-- =====================================================
+     FLASH
+===================================================== -->
+
+<div class="flash-container">
+
+{% with messages =
+get_flashed_messages(
+with_categories=true
+) %}
+
+{% if messages %}
+
+{% for category,message in messages %}
+
+<div
+class="alert alert-{{ category }}">
+
+<i class="fa-solid fa-circle-info"></i>
+
+{{ message }}
+
+<button
+type="button"
+onclick="this.parentElement.remove()"
+style="
+float:right;
+background:none;
+border:0;
+color:white;
+font-size:18px;
+cursor:pointer;
+">
+
+&times;
+
+</button>
+
+</div>
+
+{% endfor %}
+
+{% endif %}
+
+{% endwith %}
+
+</div>
+
+
+<!-- =====================================================
+     HERO
+===================================================== -->
+
+<section class="hero-section">
+
+
+<div class="hero-content">
+
+<span class="hero-badge">
+
+<i class="fa-solid fa-shield-halved"></i>
+
+Real-Time Campus Transit Platform
+
+</span>
+
+
+<h1 class="hero-title">
+
+VIGNAN CAMPUS
+<br>
+TRANSPORT SYSTEM
+
+</h1>
+
+
+<p class="hero-subtitle">
+
+SMART • SAFE • LIVE • CONNECTED
+
+</p>
+
+
+<p class="hero-desc">
+
+A next-generation campus transportation platform
+designed for intelligent bus tracking, live GPS,
+dynamic ETA alerts, route management and
+connected student, driver and administrator portals.
+
+</p>
+
+</div>
+
+
+<!-- =================================================
+     STATS
+================================================= -->
+
+<div class="hero-stats">
+
+
+<div class="stat-card">
+
+<div class="stat-icon blue">
+
+<i class="fa-solid fa-bus"></i>
+
+</div>
+
+<div>
+
+<span class="stat-value"
+id="stat-live-buses">
+
+{{ active_buses }} /
+{{ total_buses }}
+
+</span>
+
+<span class="stat-label">
+
+Active Buses
+
+</span>
+
+</div>
+
+</div>
+
+
+<div class="stat-card">
+
+<div class="stat-icon green">
+
+<i class="fa-solid fa-route"></i>
+
+</div>
+
+<div>
+
+<span class="stat-value">
+
+{{ active_routes }}
+
+</span>
+
+<span class="stat-label">
+
+Active Routes
+
+</span>
+
+</div>
+
+</div>
+
+
+<div class="stat-card">
+
+<div class="stat-icon
+{% if safety_status == 'SECURE' %}
+green
+{% else %}
+red
+{% endif %}">
+
+<i class="fa-solid
+{% if safety_status == 'SECURE' %}
+fa-circle-check
+{% else %}
+fa-triangle-exclamation
+{% endif %}">
+</i>
+
+</div>
+
+<div>
+
+<span class="stat-value">
+
+{{ safety_status }}
+
+</span>
+
+<span class="stat-label">
+
+Campus Safety
+
+</span>
+
+</div>
+
+</div>
+
+
+<div class="stat-card">
+
+<div class="stat-icon red">
+
+<i class="fa-solid fa-phone-flip"></i>
+
+</div>
+
+<div>
+
+<span class="stat-value">
+
+24x7
+
+</span>
+
+<span class="stat-label">
+
+Emergency Helpline
+
+</span>
+
+</div>
+
+</div>
+
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     PORTALS
+===================================================== -->
+
+<section class="container section-padding">
+
+
+<h2 class="section-title text-center">
+
+SELECT YOUR ACCESS PORTAL
+
+</h2>
+
+
+<p class="section-subtitle text-center">
+
+Choose your role to access your dedicated
+transportation dashboard.
+
+</p>
+
+
+<div class="portal-grid">
+
+
+<!-- STUDENT -->
+
+<div class="portal-card">
+
+
+<div class="portal-card-header">
+
+<div class="portal-icon">
+
+<i class="fa-solid fa-graduation-cap"></i>
+
+</div>
+
+<span class="portal-tag">
+
+Students & Staff
+
+</span>
+
+</div>
+
+
+<h3>
+
+1. STUDENT PORTAL
+
+</h3>
+
+
+<p>
+
+Track your assigned college bus,
+live location, distance and estimated
+arrival time from one intelligent dashboard.
+
+</p>
+
+
+<ul class="portal-features">
+
+<li>
+<i class="fa-solid fa-check"></i>
+Live GPS Bus Tracking
+</li>
+
+<li>
+<i class="fa-solid fa-check"></i>
+Dynamic Distance & ETA
+</li>
+
+<li>
+<i class="fa-solid fa-check"></i>
+Bus Stop Notifications
+</li>
+
+<li>
+<i class="fa-solid fa-check"></i>
+Interactive Route Map
+</li>
+
+</ul>
+
+
+<a href="/login/student"
+class="btn btn-primary btn-block portal-btn">
+
+Enter Student Portal
+
+<i class="fa-solid fa-arrow-right"></i>
+
+</a>
+
+</div>
+
+
+<!-- DRIVER -->
+
+<div class="portal-card">
+
+
+<div class="portal-card-header">
+
+<div class="portal-icon">
+
+<i class="fa-solid fa-id-card"></i>
+
+</div>
+
+<span class="portal-tag">
+
+Bus Drivers
+
+</span>
+
+</div>
+
+
+<h3>
+
+2. DRIVER PORTAL
+
+</h3>
+
+
+<p>
+
+Manage daily trips and securely
+share your live bus location with
+students and transport administrators.
+
+</p>
+
+
+<ul class="portal-features">
+
+<li>
+<i class="fa-solid fa-check"></i>
+One-Tap Start & Stop Trip
+</li>
+
+<li>
+<i class="fa-solid fa-check"></i>
+Live Browser GPS Sharing
+</li>
+
+<li>
+<i class="fa-solid fa-check"></i>
+Emergency Broadcast
+</li>
+
+<li>
+<i class="fa-solid fa-check"></i>
+Driver Assignment Management
+</li>
+
+</ul>
+
+
+<a href="/login/driver"
+class="btn btn-success btn-block portal-btn">
+
+Enter Driver Portal
+
+<i class="fa-solid fa-arrow-right"></i>
+
+</a>
+
+</div>
+
+
+<!-- ADMIN -->
+
+<div class="portal-card">
+
+
+<div class="portal-card-header">
+
+<div class="portal-icon">
+
+<i class="fa-solid fa-user-shield"></i>
+
+</div>
+
+<span class="portal-tag">
+
+Transport Admin
+
+</span>
+
+</div>
+
+
+<h3>
+
+3. ADMIN PORTAL
+
+</h3>
+
+
+<p>
+
+Control buses, drivers, students,
+routes and the complete campus
+fleet from a centralized command center.
+
+</p>
+
+
+<ul class="portal-features">
+
+<li>
+<i class="fa-solid fa-check"></i>
+Live Fleet Monitoring
+</li>
+
+<li>
+<i class="fa-solid fa-check"></i>
+Bus & Driver Management
+</li>
+
+<li>
+<i class="fa-solid fa-check"></i>
+Student & Route Management
+</li>
+
+<li>
+<i class="fa-solid fa-check"></i>
+Transport Operations Control
+</li>
+
+</ul>
+
+
+<a href="/login/admin"
+class="btn btn-dark btn-block portal-btn">
+
+Enter Admin Portal
+
+<i class="fa-solid fa-arrow-right"></i>
+
+</a>
+
+</div>
+
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     DEMO
+===================================================== -->
+
+<section class="campus-preview-section">
+
+
+<div class="container">
+
+
+<div class="preview-card">
+
+
+<h2>
+
+<i class="fa-solid fa-key"></i>
+
+Demo Credentials
+
+</h2>
+
+
+<div class="cred-grid">
+
+
+<div class="cred-item">
+
+<strong>
+Student Portal:
+</strong>
+
+<code>STU001</code>
+
+/
+
+<code>password123</code>
+
+</div>
+
+
+<div class="cred-item">
+
+<strong>
+Driver A:
+</strong>
+
+<code>DRV001</code>
+
+/
+
+<code>password123</code>
+
+</div>
+
+
+<div class="cred-item">
+
+<strong>
+Driver B:
+</strong>
+
+<code>DRV002</code>
+
+/
+
+<code>password123</code>
+
+</div>
+
+
+<div class="cred-item">
+
+<strong>
+Admin Portal:
+</strong>
+
+<code>ADMIN001</code>
+
+/
+
+<code>admin123</code>
+
+</div>
+
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<footer class="footer">
+
+
+<div class="footer-container">
+
+
+<p>
+
+&copy; 2026
+Vignan Campus Transport System
+
+&bull;
+
+Engineering College Campus
+Transit Authority
+
+</p>
+
+
+<div class="footer-status">
+
+<span class="status-indicator online"></span>
+
+Telemetry Server:
+
+<strong>
+Operational
+</strong>
+
+</div>
+
+
+</div>
+
+</footer>
+
+
+<!-- =====================================================
+     JAVASCRIPT
+===================================================== -->
+
+<script>
+
+/* =========================================
+   SCROLL REVEAL
+========================================= */
+
+const revealItems =
+document.querySelectorAll(
+    ".portal-card,.preview-card"
+);
+
+
+const revealObserver =
+new IntersectionObserver(
+
+entries => {
+
+entries.forEach(entry => {
+
+if(entry.isIntersecting){
+
+entry.target.classList.add(
+    "show"
+);
+
+}
+
+});
+
+},
+
+{
+threshold:.12
+}
+
+);
+
+
+revealItems.forEach(
+item => {
+
+item.classList.add(
+    "reveal"
+);
+
+revealObserver.observe(
+    item
+);
+
+});
+
+
+/* =========================================
+   MOUSE PARALLAX
+========================================= */
+
+document.addEventListener(
+"mousemove",
+
+function(e){
+
+const x =
+(e.clientX /
+window.innerWidth -
+.5) * 2;
+
+const y =
+(e.clientY /
+window.innerHeight -
+.5) * 2;
+
+
+const hero =
+document.querySelector(
+".hero-content"
+);
+
+
+if(hero){
+
+hero.style.transform =
+
+"translate(" +
+x * 4 +
+"px," +
+y * 4 +
+"px)";
+
+}
+
+});
+
+
+/* =========================================
+   LIVE STAT PULSE
+========================================= */
+
+setInterval(
+
+function(){
+
+const stat =
+document.getElementById(
+"stat-live-buses"
+);
+
+if(!stat)
+return;
+
+stat.style.transform =
+"scale(1.08)";
+
+setTimeout(
+
+function(){
+
+stat.style.transform =
+"scale(1)";
+
+},
+
+350
+
+);
+
+},
+
+4000
+
+);
+
+
+/* =========================================
+   AUTO REMOVE FLASH
+========================================= */
+
+setTimeout(
+
+function(){
+
+document
+.querySelectorAll(".alert")
+.forEach(
+
+alert => {
+
+alert.style.opacity="0";
+
+alert.style.transform=
+"translateX(30px)";
+
+setTimeout(
+
+() => alert.remove(),
+
+500
+
+);
+
+}
+
+);
+
+},
+
+6000
+
+);
+
+</script>
+
+
+</body>
+
+</html>
+```

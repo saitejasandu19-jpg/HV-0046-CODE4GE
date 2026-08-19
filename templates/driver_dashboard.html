@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Driver Dashboard | VIGNAN CAMPUS TRANSPORT SYSTEM</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/" class="nav-brand">
+                <i class="fa-solid fa-bus-simple brand-icon"></i>
+                <div class="brand-text">
+                    <span class="brand-title">VIGNAN CAMPUS TRANSPORT SYSTEM</span>
+                    <span class="brand-subtitle">DRIVER COCKPIT DASHBOARD</span>
+                </div>
+            </a>
+            <div class="nav-links">
+                <span class="nav-user-info"><i class="fa-solid fa-id-badge"></i> <strong>{{ driver.name }}</strong> ({{ driver.driver_id }})</span>
+                <a href="/logout" class="btn btn-sm btn-outline-danger nav-btn"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="driver-dashboard-full">
+        <div class="dash-header">
+            <div class="dash-welcome">
+                <h2>Welcome, <span id="driver-name">{{ driver.name }}</span></h2>
+                <p class="text-muted mb-0">
+                    <i class="fa-solid fa-id-badge"></i> Driver ID: <strong>{{ driver.driver_id }}</strong> &bull; 
+                    Phone: <strong>{{ driver.phone }}</strong> &bull; 
+                    License: <strong>{{ driver.license_number }}</strong>
+                </p>
+            </div>
+
+            <div class="dash-status-pill">
+                <span class="badge {% if bus and bus.status == 'ACTIVE' %}bg-success{% elif bus and bus.status == 'EMERGENCY' %}bg-danger{% else %}bg-secondary{% endif %}" id="driver-status-badge">
+                    {{ bus.status if bus else 'NO ASSIGNED BUS' }}
+                </span>
+            </div>
+        </div>
+
+        <!-- Full Grid Layout: Left (Metrics + Controls + GPS Status), Right (Enlarged Cockpit Map) -->
+        <div class="driver-grid-layout">
+            <div class="dash-side-panel d-flex flex-column gap-3">
+                <!-- Vehicle & Route Card -->
+                <div class="card p-3">
+                    <h5 class="fw-bold mb-3"><i class="fa-solid fa-bus text-primary"></i> Assigned Vehicle</h5>
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                        <span class="text-muted font-weight-bold">Bus Number:</span>
+                        <h4 class="mb-0 text-primary"><strong>{{ bus.bus_number if bus else 'None' }}</strong></h4>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                        <span class="text-muted font-weight-bold">Registration:</span>
+                        <span class="badge bg-light text-dark border"><code>{{ bus.registration_number if bus else 'N/A' }}</code></span>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                        <span class="text-muted font-weight-bold">Route:</span>
+                        <span class="fw-bold">{{ bus.route_name if bus and bus.route_name else 'Route 1' }}</span>
+                    </div>
+                </div>
+
+                <!-- 📍 LIVE GPS STATUS PANEL -->
+                <div class="card p-3 border-primary">
+                    <h5 class="fw-bold mb-3 text-primary"><i class="fa-solid fa-satellite-dish"></i> 📍 LIVE GPS STATUS</h5>
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                        <span class="text-muted font-weight-bold">GPS Status:</span>
+                        <span class="badge bg-success" id="gps-tracking-status">🟢 LIVE</span>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                        <span class="text-muted font-weight-bold">Latitude:</span>
+                        <span class="fw-bold text-monospace" id="driver-lat">16.30603</span>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                        <span class="text-muted font-weight-bold">Longitude:</span>
+                        <span class="fw-bold text-monospace" id="driver-lng">80.43606</span>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                        <span class="text-muted font-weight-bold">Current Speed:</span>
+                        <span class="fw-bold text-success" id="driver-current-speed">28.0 km/h</span>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-between">
+                        <span class="text-muted font-weight-bold">Trip Status:</span>
+                        <span class="badge bg-info text-white" id="trip-status-tag">ON TRIP</span>
+                    </div>
+                </div>
+
+                <!-- Large Stacked Driver Trip Controls -->
+                <div class="card p-3">
+                    <h5 class="fw-bold mb-3"><i class="fa-solid fa-sliders"></i> TRIP CONTROLS</h5>
+                    <div class="driver-btn-stacked">
+                        <button type="button" id="btn-start-trip" class="btn btn-success btn-action-lg" onclick="driverStartTrip()">
+                            <i class="fa-solid fa-circle-play"></i>
+                            <span>🟢 START TRIP</span>
+                        </button>
+
+                        <button type="button" id="btn-stop-trip" class="btn btn-secondary btn-action-lg" onclick="driverStopTrip()">
+                            <i class="fa-solid fa-circle-stop"></i>
+                            <span>🔴 STOP TRIP</span>
+                        </button>
+
+                        <button type="button" id="btn-emergency" class="btn btn-danger btn-action-lg btn-emergency-pulse" onclick="triggerEmergencyAlert()">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                            <span>🚨 EMERGENCY</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Full Height Interactive Cockpit Map -->
+            <div class="dash-map-container card">
+                <div class="card-header flex-between">
+                    <span><i class="fa-solid fa-map-location-dot"></i> VEHICLE COCKPIT MAP</span>
+                    <span><i class="fa-solid fa-circle text-success pulse-dot"></i> Live Driver GPS Active</span>
+                </div>
+                <div id="driver-map" class="interactive-map" style="height: 100%; min-height: 600px;"></div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Socket.IO & Leaflet JS -->
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="{{ url_for('static', filename='js/map.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/driver.js') }}"></script>
+
+    <script>
+    window.DRIVER_DATA = {
+        driver_db_id: {{ driver.id }},
+        driver_id_code: "{{ driver.driver_id }}",
+        bus_id: {{ bus.id if bus else 'null' }},
+        bus_number: "{{ bus.bus_number if bus else '' }}"
+    };
+    </script>
+</body>
+</html>
