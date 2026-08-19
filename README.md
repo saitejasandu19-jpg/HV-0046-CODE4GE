@@ -143,3 +143,5 @@ python app.py
 - Go to **Replacement Bus Wizard** tab: Select Bus 2 and Replacement Bus 6 -> Click **Dispatch**.
   - Student receives Popup: *"Replacement bus arranged for Route 2."*
   - Student receives Voice: *"Replacement bus has been arranged for Route 2."*
+# HV-0046-CODE4GE
+"Real-Time College Bus Tracking, Route Management and Student Notification System"
